@@ -46,10 +46,8 @@ const Gateways = () => {
   }
 
   const handleDelete = (rowData) => {
-    api.deleteGateway(rowData.serial, () => {
-      setGateways(
-        gateways.filter((gateway) => gateway.serial !== rowData.serial),
-      )
+    api.deleteGateway(rowData.serial, (data) => {
+      setGateways(data)
     })
   }
 
