@@ -2,7 +2,7 @@ const express = require('express')
 const app = express()
 const port = process.env.PORT || 5000
 const cors = require('cors')
-const crypto = require ('crypto')
+const crypto = require('crypto')
 
 // const database = require('./sqlitedb')
 
@@ -20,21 +20,55 @@ async function prepare() {
       ip VARCHAR NOT NULL
     );
   `)
+  await db.query(sql`
+    CREATE TABLE peripheral (
+      id VARCHAR NOT NULL PRIMARY KEY,
+      vendor VARCHAR,
+      created_date VARCHAR,
+      status TINYINT DEFAULT 0,
+      gatewayid VARCHAR NOT NULL
+    );
+  `)
 }
 const prepared = prepare()
 
-async function set(serial, name, ip) {
+async function setGateway(serial, name, ip) {
   await prepared
   await db.query(sql`
     INSERT INTO gateway (serial, name, ip)
       VALUES (${serial}, ${name}, ${ip})
     ON CONFLICT (serial) DO UPDATE
       SET name=excluded.name;
-      SET ip=excluded.ip
+      SET ip=excluded.ip;
   `)
 }
 
-async function getAll() {
+async function setPeripheral(vendor, status, gateway) {
+  const id = crypto.randomUUID()
+  const date = new Date().toString()
+  await prepared
+  await db.query(sql`
+    INSERT INTO peripheral (id, created_date, vendor, status, gatewayid)
+      VALUES (${id}, ${date}, ${vendor}, ${status}, ${gateway})
+    ON CONFLICT (id) DO UPDATE
+      SET vendor=excluded.vendor;
+      SET status=excluded.status;
+  `)
+}
+
+async function getPeripherals(gateway) {
+  await prepared
+  const results = await db.query(sql`
+    SELECT * FROM peripheral WHERE gatewayid=${gateway};
+  `)
+  if (results.length) {
+    return results[0]
+  } else {
+    return undefined
+  }
+}
+
+async function getAllGateway() {
   await prepared
   const results = await db.query(sql`SELECT * FROM gateway;`)
   if (results.length) {
@@ -56,7 +90,7 @@ async function getBySerial(serial) {
   }
 }
 
-async function remove(serial) {
+async function removeGateway(serial) {
   await prepared
   await db.query(sql`
     DELETE FROM gateway WHERE serial=${serial};
@@ -64,11 +98,17 @@ async function remove(serial) {
 }
 
 async function run() {
-  await set(crypto.randomUUID(), 'Gateway1', '192.168.1.1')
-  await set(crypto.randomUUID(), 'Gateway2', '192.168.1.2')
-  await set(crypto.randomUUID(), 'Gateway3', '192.168.1.3')
-  await set(crypto.randomUUID(), 'Gateway4', '192.168.1.4')
-  await set(crypto.randomUUID(), 'Gateway5', '192.168.1.5')
+  await setGateway('GW1-TEST', 'Gateway1', '192.168.1.1')
+  await setGateway('GW2-TEST', 'Gateway2', '192.168.1.2')
+  await setGateway('GW3-TEST', 'Gateway3', '192.168.1.3')
+  await setGateway('GW4-TEST', 'Gateway4', '192.168.1.4')
+  await setGateway('GW5-TEST', 'Gateway5', '192.168.1.5')
+  const gateways = await getAllGateway()
+  gateways.forEach((element) => {
+    setPeripheral('Logitech', true, element.serial)
+    setPeripheral('Razer', true, element.serial)
+    setPeripheral('Logitech', false, element.serial)
+  })
 }
 run().catch((ex) => {
   console.error(ex.stack)
@@ -84,17 +124,27 @@ app.get('/', (req, res) => {
 })
 
 app.get('/gateways', async (req, res) => {
-  const response = await getAll()
-  res.send(response)
+  let response = await getAllGateway()
+  const promises = response.map(async (element) => 
+    element.peripherals = await getPeripherals(element.serial)
+  )
+  Promise.all(promises).then(() => {
+    res.send(response)
+  })
+  
 })
 
 app.get('/gateway', async (req, res) => {
-  const response = await getBySerial(req.query.serial)
-  console.log(response)
+  let response = await getBySerial(req.query.serial)
+  const promises = response.peripherals = await getPeripherals(response.serial)
+  Promise.all(promises).then(() => {
+    res.send(response)
+  })
   res.send(response)
 })
 
-app.post('/gateway', (req, res) => {
-  console.log('Connected to React')
-  res.send('Test')
+app.delete('/gateway', async (req, res) => {
+  await removeGateway(req.query.serial)
+  const response = await getAllGateway()
+  res.send(response)
 })
