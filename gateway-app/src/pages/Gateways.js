@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import api from '../api/api'
 
-import { useLocation, useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 
 import { DataTable } from 'primereact/datatable'
 import { Column } from 'primereact/column'
@@ -9,7 +9,6 @@ import { Button } from 'primereact/button'
 
 const Gateways = () => {
   const [gateways, setGateways] = useState([])
-  const location = useLocation()
   const navigate = useNavigate();
 
   useEffect(() => {
