@@ -62,7 +62,7 @@ async function getPeripherals(gateway) {
     SELECT * FROM peripheral WHERE gatewayid=${gateway};
   `)
   if (results.length) {
-    return results[0]
+    return results
   } else {
     return undefined
   }

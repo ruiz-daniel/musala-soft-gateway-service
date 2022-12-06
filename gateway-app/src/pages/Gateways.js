@@ -10,6 +10,7 @@ import { Button } from 'primereact/button'
 const Gateways = () => {
   const navigate = useNavigate()
   const [gateways, setGateways] = useState([])
+  const [expandedRows, setExpandedRows] = useState(null)
 
   useEffect(() => {
     api.getGateways(handleGateways)
@@ -51,12 +52,47 @@ const Gateways = () => {
     })
   }
 
+  const allowExpansion = (rowData) => {
+    console.log(rowData)
+    return rowData.peripherals.length > 0
+  }
+
+  const statusBodyTemplate = (rowData) => {
+    return rowData.status ? <p>Online</p> : <p>Offline</p>
+  }
+
+  const rowExpansionTemplate = (data) => {
+    return (
+      <div className='px-5'>
+        <h5>Peripherals</h5>
+        <DataTable value={data.peripherals} responsiveLayout="scroll">
+          <Column field="id" header="Id" sortable></Column>
+          <Column field="vendor" header="Vendor" sortable></Column>
+          <Column field="created_date" header="Created" sortable></Column>
+          <Column
+            field="status"
+            header="Status"
+            body={statusBodyTemplate}
+            sortable
+          ></Column>
+        </DataTable>
+      </div>
+    )
+  }
+
   return (
     <div className="p-4">
       <h2 className="mb-3">List of gateways</h2>
 
       {gateways && (
-        <DataTable value={gateways} responsiveLayout="scroll">
+        <DataTable
+          value={gateways}
+          responsiveLayout="scroll"
+          expandedRows={expandedRows}
+          onRowToggle={(e) => setExpandedRows(e.data)}
+          rowExpansionTemplate={rowExpansionTemplate}
+        >
+          <Column expander={allowExpansion} style={{ width: '3em' }} />
           <Column field="name" header="Name" />
           <Column field="ip" header="IP" />
           <Column field="serial" header="Serial ID" />

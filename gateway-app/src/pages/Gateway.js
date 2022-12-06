@@ -7,6 +7,7 @@ const Gateway = () => {
   const [queryParams] = useSearchParams()
   const serial = queryParams.get('serial')
   const [gateway, setGateway] = useState()
+  
 
   useEffect(() => {
     api.getGateway(serial, handleGateway)
