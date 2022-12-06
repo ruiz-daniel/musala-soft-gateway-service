@@ -17,7 +17,7 @@ const Gateway = () => {
   }
 
   return(
-    <div></div>
+    <div>{gateway && <p>{gateway.serial}</p>}</div>
   )
 }
 

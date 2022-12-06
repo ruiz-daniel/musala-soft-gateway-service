@@ -37,11 +37,14 @@ export default {
         console.log(error)
       })
   },
-  getGateway(id, callback) {
+  getGateway(serial, callback) {
     apiClient
       .request({
         method: 'get',
-        url: `gateway/${id}`,
+        url: `gateway/`,
+        params: {
+          serial
+        }
       })
       .then((response) => {
         callback(response.data)
@@ -50,11 +53,14 @@ export default {
         console.log(error)
       })
   },
-  deleteGateway(id, callback) {
+  deleteGateway(serial, callback) {
     apiClient
       .request({
         method: 'delete',
-        url: `gateway/${id}`,
+        url: `gateway/`,
+        params: {
+          serial
+        }
       })
       .then((response) => {
         callback(response.data)
