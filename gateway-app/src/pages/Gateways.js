@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import api from '../api/api'
 
-import { useLocation } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 
 import { DataTable } from 'primereact/datatable'
 import { Column } from 'primereact/column'
@@ -10,6 +10,7 @@ import { Button } from 'primereact/button'
 const Gateways = () => {
   const [gateways, setGateways] = useState([])
   const location = useLocation()
+  const navigate = useNavigate();
 
   useEffect(() => {
     api.getGateways(handleGateways)
@@ -19,7 +20,15 @@ const Gateways = () => {
     setGateways([data])
   }
 
-  const handleDetails = () => {}
+  const handleDetails = (serial) => {
+    navigate(`/gateway/${serial}`)
+  }
+
+  const handleDelete = (serial) => {
+    api.deleteGateway(serial, () => {
+      setGateways(gateways.filter(gateway => gateway.serial !== serial))
+    })
+  }
 
   return (
     <div className="p-4">
@@ -40,6 +49,9 @@ const Gateways = () => {
               />{' '}
               <Button
                 className="p-button-danger"
+                onClick={() => {
+                  handleDelete()
+                }}
                 icon="pi pi-trash"
                 iconPos="right"
               />
