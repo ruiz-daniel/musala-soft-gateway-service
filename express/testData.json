@@ -3,27 +3,37 @@
     {
       "serial": "GW1-TEST",
       "name": "Gateway1",
-      "ip": "192.168.1.1"
+      "ip": "192.168.1.1",
+      "peripherals": 
+        []
     },
     {
       "serial": "GW2-TEST",
       "name": "Gateway2",
-      "ip": "192.168.25.1"
+      "ip": "192.168.25.1",
+      "peripherals": 
+        []
     },
     {
       "serial": "GW3-TEST",
       "name": "Gateway3",
-      "ip": "192.168.49.1"
+      "ip": "192.168.49.1",
+      "peripherals": 
+        []
     },
     {
       "serial": "GW4-TEST",
       "name": "Gateway4",
-      "ip": "192.168.73.1"
+      "ip": "192.168.73.1",
+      "peripherals": 
+        []
     },
     {
       "serial": "GW5-TEST",
       "name": "Gateway5",
-      "ip": "192.168.85.1"
+      "ip": "192.168.85.1",
+      "peripherals": 
+        []
     }
   ],
   "peripherals": [
