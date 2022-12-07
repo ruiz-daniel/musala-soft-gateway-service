@@ -21,10 +21,6 @@ connectDB()
 testData.gateways.forEach(async (element) => {
   await gatewayService.handler.create(element)
 })
-testData.peripherals.forEach(async (element) => {
-  element.uid = crypto.randomUUID()
-  await peripheralService.handler.create(element)
-})
 
 // Endpoints
 
