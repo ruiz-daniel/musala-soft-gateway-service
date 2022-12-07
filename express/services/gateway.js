@@ -6,12 +6,17 @@ const gatewayModel = require('../models/gateway')
  */
 module.exports.handler = {
   async create(gateway) {
-  if (!gateway) throw new Error('Missing gateway')
+    if (!gateway) throw new Error('Missing gateway')
 
-  await gatewayModel.create(gateway)
-},
-async get() {
-  const result = await gatewayModel.find()
-  return result
-}
+    await gatewayModel.create(gateway)
+  },
+  async get() {
+    const result = await gatewayModel.find().populate("peripherals")
+    return result
+  },
+  async update(gateway) {
+    if (!gateway) throw new Error('Missing gateway')
+
+    await gatewayModel.updateOne(gateway)
+  }
 }

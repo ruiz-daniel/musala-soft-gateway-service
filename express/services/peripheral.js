@@ -1,11 +1,17 @@
-const gatewayModel = require('../models/peripheral')
+const peripheralModel = require('../models/peripheral')
 
 /**
  * @param {Object} peripheral
  * @throws {Error}
  */
-module.exports.create = async (peripheral) => {
-  if (!peripheral) throw new Error('Missing peripheral')
+module.exports.handler = {
+  async create(peripheral) {
+    if (!peripheral) throw new Error('Missing peripheral')
 
-  await gatewayModel.create(peripheral)
+    await peripheralModel.create(peripheral)
+  },
+  async get() {
+    const result = await peripheralModel.find()
+    return result
+  },
 }
