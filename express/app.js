@@ -5,11 +5,15 @@ const cors = require('cors')
 const crypto = require('crypto')
 
 const {database} = require('./sqlitedb')
+const { connectDB, disconnectDB } = require('./mongodb');
 
 app.use(cors())
 app.listen(port, console.log(`Server started on port ${port}`))
 
 database.run()
+connectDB()
+
+// Endpoints
 
 app.get('/v1/gateway', async (req, res) => {
   let response = await database.getAllGateways()
