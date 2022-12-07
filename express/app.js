@@ -105,3 +105,29 @@ app.get('/v2/peripheral', async (req, res) => {
   const response = await peripheralService.handler.get()
   res.send(response)
 })
+
+app.get('/v2/peripheral/:id', async (req, res) => {
+  const response = await peripheralService.handler.find(req.params.id)
+  res.send(response)
+})
+
+app.get('/v2/peripheral/gateway/:id', async (req, res) => {
+  const gateway = await gatewayService.handler.find(req.params.id)
+  const response = gateway.peripherals || []
+  res.send(response)
+})
+
+app.patch('/v2/peripheral', async (req, res) => {
+  const response = peripheralService.handler.update(req.body)
+  res.send(response)
+})
+
+app.put('/v2/peripheral', async(req, res) => {
+  const response = peripheralService.handler.updateOverride(req.body)
+  res.send(response)
+})
+
+app.delete('/v2/peripheral/:id', (req, res) => {
+  const response = peripheralService.handler.delete(req.params.id)
+  res.send(response)
+})
