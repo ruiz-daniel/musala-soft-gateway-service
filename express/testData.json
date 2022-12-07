@@ -1,0 +1,46 @@
+{
+  "gateways": [
+    {
+      "serial": "GW1-TEST",
+      "name": "Gateway1",
+      "ip": "192.168.1.1"
+    },
+    {
+      "serial": "GW2-TEST",
+      "name": "Gateway2",
+      "ip": "192.168.25.1"
+    },
+    {
+      "serial": "GW3-TEST",
+      "name": "Gateway3",
+      "ip": "192.168.49.1"
+    },
+    {
+      "serial": "GW4-TEST",
+      "name": "Gateway4",
+      "ip": "192.168.73.1"
+    },
+    {
+      "serial": "GW5-TEST",
+      "name": "Gateway5",
+      "ip": "192.168.85.1"
+    }
+  ],
+  "peripherals": [
+    {
+      "vendor": "Logitech",
+      "status": 1,
+      "gatewayid": "GW1-TEST"
+    },
+    {
+      "vendor": "Razer",
+      "status": 1,
+      "gatewayid": "GW1-TEST"
+    },
+    {
+      "vendor": "Logitech",
+      "status": 0,
+      "gatewayid": "GW1-TEST"
+    }
+  ]
+}
