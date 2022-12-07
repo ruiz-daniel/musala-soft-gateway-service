@@ -7,6 +7,7 @@ const crypto = require('crypto')
 const { database } = require('./sqlitedb')
 const { connectDB, disconnectDB } = require('./mongodb')
 const gatewayService = require('./services/gateway')
+const peripheralService = require('./services/peripheral')
 
 const testData = require('./testData.json')
 
@@ -19,6 +20,10 @@ connectDB()
 // set up test data
 testData.gateways.forEach(async (element) => {
   await gatewayService.handler.create(element)
+})
+testData.peripherals.forEach(async (element) => {
+  element.uid = crypto.randomUUID()
+  await peripheralService.handler.create(element)
 })
 
 // Endpoints
@@ -73,5 +78,30 @@ app.delete('/v1/peripheral/:id', async (req, res) => {
 
 app.get('/v2/gateway', async (req, res) => {
   const response = await gatewayService.handler.get()
+  res.send(response)
+})
+
+app.get('/v2/gateway/:id', async (req, res) => {
+  const response = await gatewayService.handler.find(req.params.id)
+  res.send(response)
+})
+
+app.patch('/v2/gateway', (req, res) => {
+  const response = gatewayService.handler.update(req.body)
+  res.send(response)
+})
+
+app.put('/v2/gateway', (req, res) => {
+  const response = gatewayService.handler.updateOverride(req.body)
+  res.send(response)
+})
+
+app.delete('/v2/gateway/:id', (req, res) => {
+  const response = gatewayService.handler.delete(req.params.id)
+  res.send(response)
+})
+
+app.get('/v2/peripheral', async (req, res) => {
+  const response = await peripheralService.handler.get()
   res.send(response)
 })
