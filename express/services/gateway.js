@@ -30,6 +30,11 @@ module.exports.handler = {
     return result
   },
 
+  async find(id) {
+    const result = await gatewayModel.findById(id).populate('peripherals')
+    return result
+  },
+
   // http patch update
   async update(gateway) {
     if (!gateway) throw new Error('Missing gateway')
@@ -53,6 +58,11 @@ module.exports.handler = {
 
     doc.overwrite(gateway)
     const result = await doc.save()
+    return result
+  },
+
+  async delete(id) {
+    const result = await gatewayModel.findByIdAndDelete(id)
     return result
   }
 }
