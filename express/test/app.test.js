@@ -40,6 +40,54 @@ describe('API test', () => {
       expect(res.status).toBe(201)
       expect(res.body._id).toBeTruthy()
     })
+    it('Create gateway with invalid IP case 1', async () => {
+      const res = await request
+        .post('/v2/gateway')
+        .set('Content-type', 'application/json')
+        .send({
+          serial: 'GWX-TEST',
+          name: 'GatewayTest',
+          ip: '260.168.128.1',
+          peripherals: [
+            {
+              vendor: 'Logitech',
+            },
+            {
+              vendor: 'Razer',
+            },
+            {
+              vendor: 'Logitech',
+            },
+          ],
+        })
+
+      expect(res.status).toBe(400)
+      expect(res.text).toEqual("Invalid IP. Must be a valid IPv4 address")
+    })
+    it('Create gateway with invalid IP case 2', async () => {
+      const res = await request
+        .post('/v2/gateway')
+        .set('Content-type', 'application/json')
+        .send({
+          serial: 'GWX-TEST',
+          name: 'GatewayTest',
+          ip: '260.168.128.1.9',
+          peripherals: [
+            {
+              vendor: 'Logitech',
+            },
+            {
+              vendor: 'Razer',
+            },
+            {
+              vendor: 'Logitech',
+            },
+          ],
+        })
+
+      expect(res.status).toBe(400)
+      expect(res.text).toEqual("Invalid IP. Must be a valid IPv4 address")
+    })
     it('Create gateway with more than 10 peripherals', async () => {
       const res = await request
         .post('/v2/gateway')

@@ -10,6 +10,8 @@ module.exports.handler = {
   async create(gateway) {
     if (!gateway) throw new Error('Missing gateway')
 
+    if(gateway.ip && !validateIpv4(gateway.ip)) throw new Error('Invalid IP. Must be a valid IPv4 address')
+
     if (gateway.peripherals?.length && gateway.peripherals?.length <= 10) {
       gateway.peripherals.forEach(async (element) => {
         // automatically create peripherals
@@ -39,6 +41,8 @@ module.exports.handler = {
   async update(gateway) {
     if (!gateway) throw new Error('Missing gateway')
 
+    if(gateway.ip && !validateIpv4(gateway.ip)) throw new Error('Invalid IP. Must be a valid IPv4 address')
+
     if (gateway.peripherals?.length > 10) {
       throw new Error('A gateway cannot have more than 10 peripherals')
     }
@@ -50,6 +54,8 @@ module.exports.handler = {
   // http put update
   async updateOverride(gateway) {
     if (!gateway) throw new Error('Missing gateway')
+
+    if(gateway.ip && !validateIpv4(gateway.ip)) throw new Error('Invalid IP. Must be a valid IPv4 address')
 
     if (gateway.peripherals?.length > 10) {
       throw new Error('A gateway cannot have more than 10 peripherals')
@@ -66,4 +72,10 @@ module.exports.handler = {
     const result = await gatewayModel.findByIdAndDelete(id)
     return result
   },
+}
+
+function validateIpv4(ip) {
+  const regexExp = /^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$/gi;
+
+  return regexExp.test(ip);
 }
