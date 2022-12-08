@@ -47,6 +47,7 @@ export default {
         callback(response.data)
       })
       .catch((error) => {
+        alert(error.response.data)
         console.log(error)
       })
   },
@@ -61,6 +62,22 @@ export default {
         callback(response.data)
       })
       .catch((error) => {
+        alert(error.response.data)
+        console.log(error)
+      })
+  },
+  updateGateway(gateway, callback) {
+    apiClient
+      .request({
+        method: 'patch',
+        url: 'gateway/',
+        data: gateway,
+      })
+      .then((response) => {
+        callback(response.data)
+      })
+      .catch((error) => {
+        alert(error.response.data)
         console.log(error)
       })
   },
@@ -69,6 +86,21 @@ export default {
       .request({
         method: 'delete',
         url: `gateway/${id}`,
+      })
+      .then((response) => {
+        callback(response.data)
+      })
+      .catch((error) => {
+        alert(error.response.data)
+        console.log(error)
+      })
+  },
+  updatePeripheral(peripheral, callback) {
+    apiClient
+      .request({
+        method: 'patch',
+        url: 'peripheral/',
+        data: peripheral,
       })
       .then((response) => {
         callback(response.data)

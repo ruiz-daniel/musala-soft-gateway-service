@@ -8,17 +8,20 @@ import { Column } from 'primereact/column'
 import { Button } from 'primereact/button'
 import { Dialog } from 'primereact/dialog'
 
-import CreateGatewayForm from '../components/CreateGatewayForm'
+import GatewayForm from '../components/GatewayForm'
+import Peripherals from '../components/Peripherals'
 
 const Gateways = () => {
   const navigate = useNavigate()
   const [gateways, setGateways] = useState([])
   const [expandedRows, setExpandedRows] = useState(null)
   const [addModal, toggleAddModal] = useState(false)
+  const [editModal, toggleEditModal] = useState(false)
 
-  // new gateway fields
-  const [name, setName] = useState("")
-  const [ip, setIP] = useState("")
+  // gateway fields
+  const [name, setName] = useState('')
+  const [ip, setIP] = useState('')
+  const [id, setID] = useState()
 
   useEffect(() => {
     api.getGateways(handleGateways)
@@ -30,23 +33,35 @@ const Gateways = () => {
 
   const optionsTemplate = (rowData) => {
     return (
-      <>
+      <div>
         <Button
           onClick={() => {
             handleDetails(rowData)
           }}
           icon="pi pi-eye"
           iconPos="right"
-        />{' '}
+          className="mr-2 p-button-rounded"
+        />
         <Button
-          className="p-button-danger"
+          onClick={() => {
+            setName(rowData.name)
+            setIP(rowData.ip)
+            setID(rowData._id)
+            toggleEditModal(true)
+          }}
+          icon="pi pi-pencil"
+          iconPos="right"
+          className="mr-2 p-button-rounded"
+        />
+        <Button
+          className="p-button-danger p-button-rounded"
           onClick={() => {
             handleDelete(rowData)
           }}
           icon="pi pi-trash"
           iconPos="right"
         />
-      </>
+      </div>
     )
   }
 
@@ -61,7 +76,12 @@ const Gateways = () => {
   }
   const handleCreate = () => {
     if (name?.length && ip?.length) {
-      api.createGateway({name, ip}, onCreate)
+      api.createGateway({ name, ip }, onCreate)
+    }
+  }
+  const handleUpdate = () => {
+    if (id?.length && name?.length && ip?.length) {
+      api.updateGateway({ _id: id, name, ip }, onUpdate)
     }
   }
 
@@ -69,23 +89,44 @@ const Gateways = () => {
     gateways.push(data)
     toggleAddModal(false)
   }
+  const onUpdate = () => {
+    api.getGateways((data) => {
+      handleGateways(data)
+      toggleEditModal(false)
+    })
+  }
 
   const hide = () => {
     toggleAddModal(false)
+    toggleEditModal(false)
   }
 
   const allowExpansion = (rowData) => {
-    console.log(rowData)
     return rowData.peripherals.length > 0
   }
 
-  const statusBodyTemplate = (rowData) => {
-    return rowData.status ? <p>Online</p> : <p>Offline</p>
+  const handleForm = () => {
+    if (addModal) {
+      handleCreate()
+    } else if (editModal) {
+      handleUpdate()
+    }
+  }
+
+  const handlePeripheralChangeStatus = (peripheral) => {
+    peripheral.status = !peripheral.status
+    api.updatePeripheral(peripheral, () => {
+      api.getGateways(handleGateways)
+    })
   }
 
   const footer = (
     <div>
-      <Button label="Create" icon="pi pi-check" onClick={handleCreate} />
+      <Button
+        label={addModal ? 'Create' : 'Update'}
+        icon="pi pi-check"
+        onClick={handleForm}
+      />
       <Button label="Cancel" icon="pi pi-times" onClick={hide} />
     </div>
   )
@@ -93,18 +134,11 @@ const Gateways = () => {
   const rowExpansionTemplate = (data) => {
     return (
       <div className="px-5">
-        <h5>Peripherals</h5>
-        <DataTable value={data.peripherals} responsiveLayout="scroll">
-          <Column field="uid" header="UID" sortable></Column>
-          <Column field="vendor" header="Vendor" sortable></Column>
-          <Column field="date" header="Created" sortable></Column>
-          <Column
-            field="status"
-            header="Status"
-            body={statusBodyTemplate}
-            sortable
-          ></Column>
-        </DataTable>
+        <p>Peripherals</p>
+        <Peripherals
+          peripherals={data.peripherals}
+          changeStatus={handlePeripheralChangeStatus}
+        />
       </div>
     )
   }
@@ -116,7 +150,11 @@ const Gateways = () => {
         <Button
           icon="pi pi-plus"
           className="p-button-rounded p-button-sm"
-          onClick={() => toggleAddModal(true)}
+          onClick={() => {
+            setName('')
+            setIP('')
+            toggleAddModal(true)
+          }}
         />
       </h2>
       <Dialog
@@ -127,7 +165,17 @@ const Gateways = () => {
         modal
         onHide={hide}
       >
-        <CreateGatewayForm name={name} ip={ip} setName={setName} setIP={setIP} />
+        <GatewayForm name={name} ip={ip} setName={setName} setIP={setIP} />
+      </Dialog>
+      <Dialog
+        header="Update Gateway"
+        footer={footer}
+        visible={editModal}
+        style={{ width: '40vw' }}
+        modal
+        onHide={hide}
+      >
+        <GatewayForm name={name} ip={ip} setName={setName} setIP={setIP} />
       </Dialog>
 
       {gateways && (
