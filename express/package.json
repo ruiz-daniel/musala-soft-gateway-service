@@ -4,7 +4,7 @@
   "description": "",
   "main": "app.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "jest --runInBand ./test",
     "start": "node app.js",
     "dev": "nodemon app.js"
   },
@@ -14,9 +14,11 @@
     "@databases/sqlite": "^4.0.2",
     "cors": "^2.8.5",
     "express": "^4.17.1",
+    "jest": "^29.3.1",
     "mongodb": "^4.12.1",
     "mongodb-memory-server": "^8.10.1",
     "mongoose": "^6.8.0",
-    "nodemon": "^2.0.20"
+    "nodemon": "^2.0.20",
+    "supertest": "^6.3.2"
   }
 }
