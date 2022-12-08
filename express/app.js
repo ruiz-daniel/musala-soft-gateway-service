@@ -104,7 +104,11 @@ app.post('/v2/gateway', async (req, res) => {
 })
 
 app.patch('/v2/gateway', async (req, res) => {
-  const response = await gatewayService.handler.update(req.body)
+  const response = await gatewayService.handler
+    .update(req.body)
+    .catch((error) => {
+      return error.message
+    })
   if (response?._id) {
     res.send(response)
   } else if (response) {
@@ -115,7 +119,11 @@ app.patch('/v2/gateway', async (req, res) => {
 })
 
 app.put('/v2/gateway', async (req, res) => {
-  const response = await gatewayService.handler.updateOverride(req.body)
+  const response = await gatewayService.handler
+    .updateOverride(req.body)
+    .catch((error) => {
+      return error.message
+    })
   if (response?._id) {
     res.send(response)
   } else if (response) {
@@ -137,7 +145,11 @@ app.get('/v2/peripheral', async (req, res) => {
 })
 
 app.get('/v2/peripheral/:id', async (req, res) => {
-  const response = await peripheralService.handler.find(req.params.id)
+  const response = await peripheralService.handler
+    .find(req.params.id)
+    .catch((error) => {
+      return error.message
+    })
   res.send(response)
 })
 
@@ -148,9 +160,11 @@ app.get('/v2/peripheral/gateway/:id', async (req, res) => {
 })
 
 app.post('/v2/peripheral', async (req, res) => {
-  const response = await peripheralService.handler.create(req.body).catch(error => {
-    return error.message
-  })
+  const response = await peripheralService.handler
+    .create(req.body)
+    .catch((error) => {
+      return error.message
+    })
   if (response?._id) {
     res.status(201).send(response)
   } else if (response) {
@@ -158,11 +172,14 @@ app.post('/v2/peripheral', async (req, res) => {
   } else {
     res.status(500).send()
   }
-  
 })
 
 app.patch('/v2/peripheral', async (req, res) => {
-  const response = await peripheralService.handler.update(req.body)
+  const response = await peripheralService.handler
+    .update(req.body)
+    .catch((error) => {
+      return error.message
+    })
   if (response?._id) {
     res.send(response)
   } else if (response) {
@@ -173,7 +190,11 @@ app.patch('/v2/peripheral', async (req, res) => {
 })
 
 app.put('/v2/peripheral', async (req, res) => {
-  const response = await peripheralService.handler.updateOverride(req.body)
+  const response = await peripheralService.handler
+    .updateOverride(req.body)
+    .catch((error) => {
+      return error.message
+    })
   if (response?._id) {
     res.send(response)
   } else if (response) {
@@ -184,7 +205,11 @@ app.put('/v2/peripheral', async (req, res) => {
 })
 
 app.delete('/v2/peripheral/:id', async (req, res) => {
-  const response = await peripheralService.handler.delete(req.params.id)
+  const response = await peripheralService.handler
+    .delete(req.params.id)
+    .catch((error) => {
+      return error.message
+    })
   res.send(response)
 })
 
