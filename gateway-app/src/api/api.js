@@ -3,7 +3,7 @@ import axios from 'axios'
 import NProgress from 'nprogress'
 
 export const apiClient = axios.create({
-  baseURL: 'http://localhost:5000/',
+  baseURL: 'http://localhost:5000/v2/',
   headers: {
     'Content-Type': 'application/json',
   },
@@ -29,7 +29,7 @@ apiClient.interceptors.response.use(
 export default {
   getGateways(callback) {
     apiClient
-      .request({ method: 'get', url: 'gateways' })
+      .request({ method: 'get', url: 'gateway' })
       .then((response) => {
         if (callback) callback(response.data)
       })
@@ -37,14 +37,11 @@ export default {
         console.log(error)
       })
   },
-  getGateway(serial, callback) {
+  getGateway(id, callback) {
     apiClient
       .request({
         method: 'get',
-        url: `gateway/`,
-        params: {
-          serial
-        }
+        url: `gateway/${id}`,
       })
       .then((response) => {
         callback(response.data)
@@ -53,14 +50,12 @@ export default {
         console.log(error)
       })
   },
-  deleteGateway(serial, callback) {
+  createGateway(gateway, callback) {
     apiClient
       .request({
-        method: 'delete',
-        url: `gateway/`,
-        params: {
-          serial
-        }
+        method: 'post',
+        url: 'gateway/',
+        data: gateway,
       })
       .then((response) => {
         callback(response.data)
@@ -68,5 +63,18 @@ export default {
       .catch((error) => {
         console.log(error)
       })
-  }
+  },
+  deleteGateway(id, callback) {
+    apiClient
+      .request({
+        method: 'delete',
+        url: `gateway/${id}`,
+      })
+      .then((response) => {
+        callback(response.data)
+      })
+      .catch((error) => {
+        console.log(error)
+      })
+  },
 }
