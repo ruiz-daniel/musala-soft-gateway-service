@@ -48,6 +48,15 @@ module.exports.handler = {
     if (gateway.peripherals?.length > 10) {
       throw new Error('A gateway cannot have more than 10 peripherals')
     }
+    if (gateway.peripherals?.length && gateway.peripherals?.length <= 10) {
+      gateway.peripherals.forEach(async (element) => {
+        // automatically create new peripherals
+        if (!element._id) {
+          element._id = new mongoose.Types.ObjectId()
+          await peripheralService.handler.create(element)
+        }
+      })
+    } 
     let result = await gatewayModel.findByIdAndUpdate(gateway._id, gateway)
     result = await gatewayModel.findById(result._id)
     return result
@@ -62,6 +71,15 @@ module.exports.handler = {
     if (gateway.peripherals?.length > 10) {
       throw new Error('A gateway cannot have more than 10 peripherals')
     }
+    if (gateway.peripherals?.length && gateway.peripherals?.length <= 10) {
+      gateway.peripherals.forEach(async (element) => {
+        // automatically create peripherals
+        if (!element._id) {
+          element._id = new mongoose.Types.ObjectId()
+          await peripheralService.handler.create(element)
+        }
+      })
+    } 
 
     const doc = await gatewayModel.findOne({ _id: gateway._id })
 
