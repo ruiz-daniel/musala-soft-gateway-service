@@ -126,7 +126,8 @@ app.put('/v2/gateway', async (req, res) => {
 })
 
 app.delete('/v2/gateway/:id', async (req, res) => {
-  const response = await gatewayService.handler.delete(req.params.id)
+  await gatewayService.handler.delete(req.params.id)
+  const response = await gatewayService.handler.get()
   res.send(response)
 })
 

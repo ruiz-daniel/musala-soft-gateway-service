@@ -12,6 +12,8 @@ module.exports.handler = {
 
     if(gateway.ip && !validateIpv4(gateway.ip)) throw new Error('Invalid IP. Must be a valid IPv4 address')
 
+    gateway.serial = crypto.randomUUID()
+
     if (gateway.peripherals?.length && gateway.peripherals?.length <= 10) {
       gateway.peripherals.forEach(async (element) => {
         // automatically create peripherals

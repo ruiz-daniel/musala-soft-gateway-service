@@ -9,8 +9,6 @@ module.exports.handler = {
   async create(peripheral) {
     if (!peripheral) throw new Error('Missing peripheral')
 
-    peripheral.uid = crypto.randomUUID()
-
     const result = await peripheralModel.create(peripheral)
     return result
   },

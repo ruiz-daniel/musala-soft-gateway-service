@@ -21,7 +21,6 @@ describe('API test', () => {
         .post('/v2/gateway')
         .set('Content-type', 'application/json')
         .send({
-          serial: 'GWX-TEST',
           name: 'GatewayTest',
           ip: '192.168.128.1',
           peripherals: [
@@ -45,7 +44,6 @@ describe('API test', () => {
         .post('/v2/gateway')
         .set('Content-type', 'application/json')
         .send({
-          serial: 'GWX-TEST',
           name: 'GatewayTest',
           ip: '260.168.128.1',
           peripherals: [
@@ -69,7 +67,6 @@ describe('API test', () => {
         .post('/v2/gateway')
         .set('Content-type', 'application/json')
         .send({
-          serial: 'GWX-TEST',
           name: 'GatewayTest',
           ip: '260.168.128.1.9',
           peripherals: [
@@ -93,7 +90,6 @@ describe('API test', () => {
         .post('/v2/gateway')
         .set('Content-type', 'application/json')
         .send({
-          serial: 'GWX-TEST',
           name: 'GatewayTest',
           ip: '192.168.128.1',
           peripherals: [
@@ -144,7 +140,6 @@ describe('API test', () => {
         .post('/v2/gateway')
         .set('Content-type', 'application/json')
         .send({
-          serial: 'GWX-TEST',
           name: 'GatewayTest',
           ip: '192.168.128.1',
         })
@@ -162,7 +157,6 @@ describe('API test', () => {
         .post('/v2/gateway')
         .set('Content-type', 'application/json')
         .send({
-          serial: 'GWX-TEST',
           name: 'GatewayTest',
           ip: '192.168.128.1',
         })
@@ -186,7 +180,6 @@ describe('API test', () => {
         .post('/v2/gateway')
         .set('Content-type', 'application/json')
         .send({
-          serial: 'GWX-TEST',
           name: 'GatewayTest',
           ip: '192.168.128.1',
         })
@@ -196,7 +189,6 @@ describe('API test', () => {
 
       const res2 = await request.put('/v2/gateway/').send({
         _id: res1.body._id,
-        serial: 'GWX-TEST',
         name: 'GatewayTest',
       })
 
@@ -257,7 +249,6 @@ describe('API test', () => {
         .post('/v2/gateway')
         .set('Content-type', 'application/json')
         .send({
-          serial: 'GWX-TEST',
           name: 'GatewayTest',
           ip: '192.168.128.1',
           peripherals: [
