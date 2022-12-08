@@ -1,4 +1,5 @@
 const peripheralModel = require('../models/peripheral')
+const crypto = require('crypto')
 
 /**
  * @param {Object} peripheral
@@ -8,7 +9,10 @@ module.exports.handler = {
   async create(peripheral) {
     if (!peripheral) throw new Error('Missing peripheral')
 
-    await peripheralModel.create(peripheral)
+    peripheral.uid = crypto.randomUUID()
+
+    const result = await peripheralModel.create(peripheral)
+    return result
   },
   async get() {
     const result = await peripheralModel.find()
@@ -24,7 +28,8 @@ module.exports.handler = {
   async update(peripheral) {
     if (!peripheral) throw new Error('Missing peripheral')
 
-    const result = await peripheralModel.findByIdAndUpdate(peripheral._id, peripheral)
+    let result = await peripheralModel.findByIdAndUpdate(peripheral._id, peripheral)
+    result = await peripheralModel.findById(peripheral._id)
     return result
   },
   

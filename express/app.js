@@ -12,7 +12,13 @@ const peripheralService = require('./services/peripheral')
 const testData = require('./testData.json')
 
 app.use(cors())
-app.listen(port, console.log(`Server started on port ${port}`))
+app.use(express.json())
+app.use(
+  express.urlencoded({
+    extended: true,
+  }),
+)
+const server = app.listen(port, console.log(`Server started on port ${port}`))
 
 database.run()
 connectDB()
@@ -82,18 +88,45 @@ app.get('/v2/gateway/:id', async (req, res) => {
   res.send(response)
 })
 
-app.patch('/v2/gateway', (req, res) => {
-  const response = gatewayService.handler.update(req.body)
-  res.send(response)
+app.post('/v2/gateway', async (req, res) => {
+  const response = await gatewayService.handler
+    .create(req.body)
+    .catch((error) => {
+      return error.message
+    })
+  if (response?._id) {
+    res.status(201).send(response)
+  } else if (response) {
+    res.status(400).send(response)
+  } else {
+    res.status(500).send()
+  }
 })
 
-app.put('/v2/gateway', (req, res) => {
-  const response = gatewayService.handler.updateOverride(req.body)
-  res.send(response)
+app.patch('/v2/gateway', async (req, res) => {
+  const response = await gatewayService.handler.update(req.body)
+  if (response?._id) {
+    res.send(response)
+  } else if (response) {
+    res.status(400).send(response)
+  } else {
+    res.status(500).send()
+  }
 })
 
-app.delete('/v2/gateway/:id', (req, res) => {
-  const response = gatewayService.handler.delete(req.params.id)
+app.put('/v2/gateway', async (req, res) => {
+  const response = await gatewayService.handler.updateOverride(req.body)
+  if (response?._id) {
+    res.send(response)
+  } else if (response) {
+    res.status(400).send(response)
+  } else {
+    res.status(500).send()
+  }
+})
+
+app.delete('/v2/gateway/:id', async (req, res) => {
+  const response = await gatewayService.handler.delete(req.params.id)
   res.send(response)
 })
 
@@ -113,17 +146,45 @@ app.get('/v2/peripheral/gateway/:id', async (req, res) => {
   res.send(response)
 })
 
+app.post('/v2/peripheral', async (req, res) => {
+  const response = await peripheralService.handler.create(req.body).catch(error => {
+    return error.message
+  })
+  if (response?._id) {
+    res.status(201).send(response)
+  } else if (response) {
+    res.status(400).send(response)
+  } else {
+    res.status(500).send()
+  }
+  
+})
+
 app.patch('/v2/peripheral', async (req, res) => {
-  const response = peripheralService.handler.update(req.body)
+  const response = await peripheralService.handler.update(req.body)
+  if (response?._id) {
+    res.send(response)
+  } else if (response) {
+    res.status(400).send(response)
+  } else {
+    res.status(500).send()
+  }
+})
+
+app.put('/v2/peripheral', async (req, res) => {
+  const response = await peripheralService.handler.updateOverride(req.body)
+  if (response?._id) {
+    res.send(response)
+  } else if (response) {
+    res.status(400).send(response)
+  } else {
+    res.status(500).send()
+  }
+})
+
+app.delete('/v2/peripheral/:id', async (req, res) => {
+  const response = await peripheralService.handler.delete(req.params.id)
   res.send(response)
 })
 
-app.put('/v2/peripheral', async(req, res) => {
-  const response = peripheralService.handler.updateOverride(req.body)
-  res.send(response)
-})
-
-app.delete('/v2/peripheral/:id', (req, res) => {
-  const response = peripheralService.handler.delete(req.params.id)
-  res.send(response)
-})
+module.exports = { app, server }

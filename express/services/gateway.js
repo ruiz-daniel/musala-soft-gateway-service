@@ -14,7 +14,6 @@ module.exports.handler = {
       gateway.peripherals.forEach(async (element) => {
         // automatically create peripherals
         if (!element._id) {
-          element.uid = crypto.randomUUID()
           element._id = new mongoose.Types.ObjectId()
           await peripheralService.handler.create(element)
         }
@@ -23,7 +22,8 @@ module.exports.handler = {
       throw new Error('A gateway cannot have more than 10 peripherals')
     }
 
-    await gatewayModel.create(gateway)
+    const result = await gatewayModel.create(gateway)
+    return result
   },
   async get() {
     const result = await gatewayModel.find().populate('peripherals')
@@ -42,10 +42,11 @@ module.exports.handler = {
     if (gateway.peripherals?.length > 10) {
       throw new Error('A gateway cannot have more than 10 peripherals')
     }
-    const result = await gatewayModel.findByIdAndUpdate(gateway._id, gateway)
+    let result = await gatewayModel.findByIdAndUpdate(gateway._id, gateway)
+    result = await gatewayModel.findById(result._id)
     return result
   },
-  
+
   // http put update
   async updateOverride(gateway) {
     if (!gateway) throw new Error('Missing gateway')
@@ -54,7 +55,7 @@ module.exports.handler = {
       throw new Error('A gateway cannot have more than 10 peripherals')
     }
 
-    const doc = await gatewayModel.findOne({_id: gateway._id})
+    const doc = await gatewayModel.findOne({ _id: gateway._id })
 
     doc.overwrite(gateway)
     const result = await doc.save()
@@ -64,5 +65,5 @@ module.exports.handler = {
   async delete(id) {
     const result = await gatewayModel.findByIdAndDelete(id)
     return result
-  }
+  },
 }
