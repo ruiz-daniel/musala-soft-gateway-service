@@ -189,6 +189,7 @@ describe('API test', () => {
 
       const res2 = await request.put('/v2/gateway/').send({
         _id: res1.body._id,
+        serial: res1.body.serial,
         name: 'GatewayTest',
       })
 
