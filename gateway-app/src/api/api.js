@@ -109,4 +109,18 @@ export default {
         console.log(error)
       })
   },
+  deletePeripheral(id, callback) {
+    apiClient
+      .request({
+        method: 'delete',
+        url: `peripheral/${id}`,
+      })
+      .then((response) => {
+        callback(response.data)
+      })
+      .catch((error) => {
+        alert(error.response.data)
+        console.log(error)
+      })
+  }
 }

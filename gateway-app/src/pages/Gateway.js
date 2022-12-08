@@ -37,6 +37,12 @@ const Gateway = () => {
     toggleAddModal(false)
   }
 
+  const handleDeletePeripheral = (peripheral) => {
+    api.deletePeripheral(peripheral._id, () => {
+      api.getGateway(gatewayid, handleGateway)
+    })
+  }
+
   const hide = () => {
     toggleAddModal(false)
   }
@@ -96,6 +102,7 @@ const Gateway = () => {
           <Peripherals
             peripherals={gateway.peripherals}
             changeStatus={handlePeripheralChangeStatus}
+            handleDelete={handleDeletePeripheral}
           />
         </div>
       )}

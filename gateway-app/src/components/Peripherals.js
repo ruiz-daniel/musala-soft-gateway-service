@@ -2,9 +2,10 @@ import React from 'react'
 
 import { DataTable } from 'primereact/datatable'
 import { Column } from 'primereact/column'
+import { Button } from 'primereact/button'
 
 
-const Peripherals = ({ peripherals, changeStatus }) => {
+const Peripherals = ({ peripherals, changeStatus, handleDelete }) => {
   const statusBodyTemplate = (rowData) => {
     return rowData.status ? (
       <p
@@ -27,6 +28,21 @@ const Peripherals = ({ peripherals, changeStatus }) => {
     )
   }
 
+  const optionsTemplate = (rowData) => {
+    return (
+      <div>
+        <Button
+          className="p-button-danger p-button-rounded"
+          onClick={() => {
+            handleDelete(rowData)
+          }}
+          icon="pi pi-trash"
+          iconPos="right"
+        />
+      </div>
+    )
+  }
+
   return (
     <div>
       <DataTable value={peripherals} responsiveLayout="scroll">
@@ -38,6 +54,7 @@ const Peripherals = ({ peripherals, changeStatus }) => {
           body={statusBodyTemplate}
           sortable
         ></Column>
+        {handleDelete && <Column body={optionsTemplate} />}
       </DataTable>
     </div>
   )
