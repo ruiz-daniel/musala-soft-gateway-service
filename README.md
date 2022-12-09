@@ -14,12 +14,18 @@ Frontend: React.js
 
 # Instalation
 
-Start server
+Server side
 
 `cd express`
+install dependencies
+`npm install`
+run server
 `npm run dev`
 
-Start client
+Client side
 
 `cd gateway-app`
+install dependencies
+`npm install`
+run app
 `npm start`
